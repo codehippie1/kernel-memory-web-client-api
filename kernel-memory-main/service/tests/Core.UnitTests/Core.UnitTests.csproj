@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <AssemblyName>Microsoft.KM.Core.UnitTests</AssemblyName>
+        <RootNamespace>Microsoft.KM.Core.UnitTests</RootNamespace>
+        <TargetFramework>net8.0</TargetFramework>
+        <RollForward>LatestMajor</RollForward>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <NoWarn>$(NoWarn);KMEXP00;KMEXP03;</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+        <Using Include="Xunit.Abstractions" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Moq" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+    </ItemGroup>
+
+</Project>

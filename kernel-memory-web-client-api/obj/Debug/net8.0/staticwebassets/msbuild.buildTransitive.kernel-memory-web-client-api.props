@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\kernel-memory-web-client-api.props" />
+</Project>

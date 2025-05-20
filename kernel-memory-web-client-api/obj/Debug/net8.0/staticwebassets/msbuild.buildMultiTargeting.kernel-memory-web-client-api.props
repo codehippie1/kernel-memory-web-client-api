@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\kernel-memory-web-client-api.props" />
+</Project>

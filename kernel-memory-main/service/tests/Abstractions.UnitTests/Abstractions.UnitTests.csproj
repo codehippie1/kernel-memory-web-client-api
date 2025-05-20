@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <AssemblyName>Microsoft.KM.Abstractions.UnitTests</AssemblyName>
+        <RootNamespace>Microsoft.KM.Abstractions.UnitTests</RootNamespace>
+        <TargetFramework>net8.0</TargetFramework>
+        <RollForward>LatestMajor</RollForward>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+        <Using Include="Xunit.Abstractions" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+        <ProjectReference Include="..\..\Abstractions\Abstractions.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+        <DefineConstants>OS_WINDOWS</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="Fixtures\Doc1.txt" />
+        <Content Include="Fixtures\Doc1.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <None Remove="Fixtures\Documents\Doc1.txt" />
+        <Content Include="Fixtures\Documents\Doc1.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>
