@@ -45,6 +45,7 @@ app.MapPost("/ask", async (
     Console.WriteLine($"KernelMemoryWebClientApi ask input-------------------------------------------> {request.Input}");
     var result = await memory.AskAsync(
         question: request.Input
+        //minRelevance: 0.03
         //index: request.Index,
         //filters: filters,
         //cancellationToken: default
