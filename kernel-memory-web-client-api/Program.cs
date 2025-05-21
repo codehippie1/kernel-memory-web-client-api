@@ -24,34 +24,63 @@ app.MapPost("/ask", async (
     [FromServices] IKernelMemory memory,
     [FromBody] AskRequest request) =>
 {
-    Console.WriteLine("=== Ask Request Details ===");
-    Console.WriteLine($"Request Input: {request.Input}");
-    Console.WriteLine($"Request Index: {request.Index}");
-    Console.WriteLine($"Request Filters: {JsonSerializer.Serialize(request.Filters)}");
-    Console.WriteLine("=========================");
-
-    /*var filters = new List<MemoryFilter>();
-    if (request.Filters != null)
+    try 
     {
-        // Create a single filter with AND conditions
-        var filter = MemoryFilters.ByTag("type", "default");
-        foreach (var f in request.Filters)
-        {
-            filter = filter.ByTag(f.Key, f.Value);
-        }
-        filters.Add(filter);
-    }*/
+        Console.WriteLine("=== Ask Request Details ===");
+        Console.WriteLine($"Request Input: {request.Input}");
+        Console.WriteLine($"Request Filters: {JsonSerializer.Serialize(request.Filters)}");
+        Console.WriteLine("=========================");
 
-    Console.WriteLine($"KernelMemoryWebClientApi ask input-------------------------------------------> {request.Input}");
-    var result = await memory.AskAsync(
-        question: request.Input
-        //minRelevance: 0.03
-        //index: request.Index,
-        //filters: filters,
-        //cancellationToken: default
-    );
-    Console.WriteLine($"KernelMemoryWebClientApi ask result -------------------------------------------------> {result.Result}");
-    return Results.Ok(result.Result);
+        if (string.IsNullOrEmpty(request.Input))
+        {
+            return Results.BadRequest("Input cannot be empty");
+        }
+
+        var filters = new List<MemoryFilter>();
+        if (request.Filters != null && request.Filters.Count > 0)
+        {
+            // Create a separate filter for each key-value pair (OR logic)
+            foreach (var f in request.Filters)
+            {
+                if (!string.IsNullOrEmpty(f.Key) && !string.IsNullOrEmpty(f.Value))
+                {
+                    var filter = MemoryFilters.ByTag(f.Key, f.Value);
+                    filters.Add(filter);
+                }
+            }
+        }
+
+        // Log the raw filter objects for debugging
+        Console.WriteLine("Raw filters:");
+        foreach (var f in filters)
+        {
+            var filterDict = new Dictionary<string, string>();
+            foreach (var tag in f)
+            {
+                // Take the first value from the list if it exists
+                if (tag.Value != null && tag.Value.Count > 0)
+                {
+                    filterDict[tag.Key] = tag.Value[0];
+                }
+            }
+            Console.WriteLine($"Filter: {JsonSerializer.Serialize(filterDict)}");
+        }
+        
+        var result = await memory.AskAsync(
+            question: request.Input,
+            //filter: MemoryFilters.ByTag("secrecy", "private")
+            filters: filters
+        );
+        
+        Console.WriteLine($"KernelMemoryWebClientApi ask result -------------------------------------------------> {result.Result}");
+        return Results.Ok(result.Result);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error in /ask endpoint: {ex.Message}");
+        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        return Results.Problem($"Error processing request: {ex.Message}");
+    }
 });
 
 app.MapPost("/uploadText", async (
@@ -64,13 +93,15 @@ app.MapPost("/uploadText", async (
     Console.WriteLine($"Index: {request.Index}");
     //Console.WriteLine($"Steps: {string.Join(", ", request.Steps ?? new List<string>())}");
     Console.WriteLine("Tags:");
+    string tagsString = "Tags:\n";
     if (request.Tags != null)
     {
         foreach (var tag in request.Tags)
         {
-            Console.WriteLine($"  {tag.Key}: {tag.Value}");
+            tagsString += $"  {tag.Key}: {tag.Value}\n";
         }
     }
+    Console.WriteLine(tagsString);
     Console.WriteLine("========================");
 
     if (string.IsNullOrEmpty(request.Text))
@@ -91,10 +122,12 @@ app.MapPost("/uploadText", async (
         }
     }
 
-    try 
+    Console.WriteLine($"Tags: {JsonSerializer.Serialize(tags)}");
+
+    try
     {
         await memory.ImportTextAsync(
-            text: request.Text,
+            text: $"Text: {request.Text}\nTags: {tagsString}",
             documentId: request.DocumentId,
             //index: request.Index ?? "default",
             tags: tags,
@@ -110,6 +143,8 @@ app.MapPost("/uploadText", async (
             Console.WriteLine("Steps:     " + string.Join(", ", status.Steps));
             Console.WriteLine("Completed: " + string.Join(", ", status.CompletedSteps));
             Console.WriteLine("Remaining: " + string.Join(", ", status.RemainingSteps));
+            //Console.WriteLine($"Tags: {JsonSerializer.Serialize(status.Tags)}");
+            Console.WriteLine($"Tag 1: {status.Tags.FirstOrDefault().Value}");
             Console.WriteLine();
             await Task.Delay(TimeSpan.FromSeconds(3));
             status = await memory.GetDocumentStatusAsync(request.DocumentId);
