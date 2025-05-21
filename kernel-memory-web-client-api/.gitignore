@@ -1,5 +1,7 @@
 # Dependencies
 node_modules/
+package-lock.json
+yarn.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -13,6 +15,19 @@ yarn-error.log*
 dist/
 build/
 *.tsbuildinfo
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs
 
 # IDE and editor files
 .idea/
@@ -20,17 +35,30 @@ build/
 *.swp
 *.swo
 .DS_Store
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # Logs
 logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Testing
 coverage/
+.nyc_output/
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
 
 # Temporary files
 tmp/
 temp/
+_tmp/
+tmp-*/
 
 # Python specific
 __pycache__/
@@ -44,4 +72,23 @@ ENV/
 .venv/
 .pytest_cache/
 .coverage
-htmlcov/ 
+htmlcov/
+
+# .NET specific
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+.vs/
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb 

@@ -2,11 +2,23 @@
 node_modules/
 package-lock.json
 yarn.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Environment variables
 .env
 .env.local
 .env.*.local
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
 
 # IDE and editor files
 .idea/
@@ -14,14 +26,52 @@ yarn.lock
 *.swp
 *.swo
 .DS_Store
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # Logs
 logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
 
 # Temporary files
 tmp/
 temp/
+_tmp/
+tmp-*/
+
+# Python specific
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# .NET specific
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs
 
 # System files
 Thumbs.db

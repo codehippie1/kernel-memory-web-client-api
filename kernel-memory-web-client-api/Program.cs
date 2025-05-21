@@ -24,7 +24,13 @@ app.MapPost("/ask", async (
     [FromServices] IKernelMemory memory,
     [FromBody] AskRequest request) =>
 {
-    var filters = new List<MemoryFilter>();
+    Console.WriteLine("=== Ask Request Details ===");
+    Console.WriteLine($"Request Input: {request.Input}");
+    Console.WriteLine($"Request Index: {request.Index}");
+    Console.WriteLine($"Request Filters: {JsonSerializer.Serialize(request.Filters)}");
+    Console.WriteLine("=========================");
+
+    /*var filters = new List<MemoryFilter>();
     if (request.Filters != null)
     {
         // Create a single filter with AND conditions
@@ -34,14 +40,16 @@ app.MapPost("/ask", async (
             filter = filter.ByTag(f.Key, f.Value);
         }
         filters.Add(filter);
-    }
+    }*/
 
+    Console.WriteLine($"KernelMemoryWebClientApi ask input-------------------------------------------> {request.Input}");
     var result = await memory.AskAsync(
-        question: request.Input,
-        index: request.Index,
-        filters: filters,
-        cancellationToken: default
+        question: request.Input
+        //index: request.Index,
+        //filters: filters,
+        //cancellationToken: default
     );
+    Console.WriteLine($"KernelMemoryWebClientApi ask result -------------------------------------------------> {result.Result}");
     return Results.Ok(result.Result);
 });
 
